@@ -1,0 +1,87 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "profall"
+version = "0.0.1"
+description = "A global Python profiler via .pth hooks."
+authors = [
+    { name = "Andy Fundinger", email = "andy@fundinger.name" }
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "influxdb-client>=1.36.0",
+    "click>=8.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.3.0",
+    "pyright>=1.1.350",
+    "mdformat>=0.7.17",
+    "tox>=4.12.0",
+    "pre-commit>=3.6.0",
+    "codespell>=2.2.6",
+]
+
+[project.scripts]
+profall = "profall.cli:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/profall"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "D",  # pydocstyle
+    "UP", # pyupgrade
+]
+ignore = [
+    "D100", # Missing docstring in public module
+    "D104", # Missing docstring in public package
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pyright]
+include = ["src"]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+reportUnknownMemberType = false
+reportUnknownArgumentType = false
+reportUnknownParameterType = false
+reportPrivateImportUsage = false
+reportMissingTypeStubs = false
+
+[tool.pytest.ini_options]
+addopts = "--cov=src/profall --cov-report=term-missing --cov-report=xml"
+testpaths = ["tests"]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py312, py313
+
+[testenv]
+deps =
+    pytest
+    pytest-cov
+    influxdb-client
+    click
+commands =
+    pytest {posargs}
+"""

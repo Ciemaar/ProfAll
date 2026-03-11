@@ -1,0 +1,54 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  quality-and-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Code Quality - Ruff Check & Format
+        run: |
+          ruff check src/ tests/
+          ruff format --check src/ tests/
+
+      - name: Code Quality - Pyright
+        run: |
+          pyright src/ tests/
+
+      - name: Code Quality - Markdown Formatting
+        run: |
+          mdformat --check *.md
+
+      - name: Set up Ephemeral InfluxDB Database
+        run: |
+          docker compose up -d
+          # Wait for DB to be healthy
+          sleep 10
+
+      - name: Run Tests & Coverage via Pytest
+        run: |
+          pytest --cov=src/profall --cov-fail-under=95 --cov-report=xml tests/
+
+      - name: Clean up Docker Containers
+        if: always()
+        run: docker compose down
