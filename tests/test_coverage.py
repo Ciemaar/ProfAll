@@ -1,7 +1,8 @@
 """Tests for core exceptions and coverage."""
 
 import sys
-from unittest.mock import patch
+from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
 from profall.cli import cli, get_site_packages_dir
@@ -10,7 +11,7 @@ from profall.core import write_measurement
 
 def test_write_measurement_import_error_coverage() -> None:
     """Ensure import error logic is fully covered."""
-    with patch.dict("sys.modules", {"influxdb_client": None}):
+    with patch.dict("sys.modules", {"influxdb_client.client.influxdb_client": None}):
         with patch("sys.stderr.write") as mock_stderr:
             write_measurement("test_metric", {"test_field": 1.0})
             mock_stderr.assert_called_once()
@@ -41,7 +42,7 @@ def test_get_site_packages_dir_system_site() -> None:
 
 
 @patch("profall.cli.get_site_packages_dir")
-def test_install_general_exception(mock_get_dir, tmp_path) -> None:
+def test_install_general_exception(mock_get_dir: MagicMock, tmp_path: Path) -> None:
     """Test exception path during install."""
     mock_get_dir.return_value = tmp_path
 
@@ -54,7 +55,7 @@ def test_install_general_exception(mock_get_dir, tmp_path) -> None:
 
 
 @patch("profall.cli.get_site_packages_dir")
-def test_uninstall_general_exception(mock_get_dir, tmp_path) -> None:
+def test_uninstall_general_exception(mock_get_dir: MagicMock, tmp_path: Path) -> None:
     """Test exception path during uninstall."""
     mock_get_dir.return_value = tmp_path
     pth_file = tmp_path / "profall.pth"

@@ -61,11 +61,6 @@ convention = "google"
 include = ["src"]
 pythonVersion = "3.12"
 typeCheckingMode = "strict"
-reportUnknownMemberType = false
-reportUnknownArgumentType = false
-reportUnknownParameterType = false
-reportPrivateImportUsage = false
-reportMissingTypeStubs = false
 
 [tool.pytest.ini_options]
 addopts = "--cov=src/profall --cov-report=term-missing --cov-report=xml"

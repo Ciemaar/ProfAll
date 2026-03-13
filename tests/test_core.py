@@ -11,7 +11,7 @@ from profall.core import end_profile, install_hooks, record_execution, write_mea
 @pytest.fixture
 def mock_influx() -> MagicMock:
     """Fixture providing a mocked InfluxDB client and APIs."""
-    with patch("influxdb_client.InfluxDBClient") as MockClient:
+    with patch("influxdb_client.client.influxdb_client.InfluxDBClient") as MockClient:
         mock_client_inst = MagicMock()
         mock_write_api = MagicMock()
 
@@ -34,7 +34,7 @@ def test_write_measurement_success(mock_influx: MagicMock) -> None:
 
 def test_write_measurement_import_error() -> None:
     """Test behavior when influxdb-client is missing."""
-    with patch.dict("sys.modules", {"influxdb_client": None}):
+    with patch.dict("sys.modules", {"influxdb_client.client.influxdb_client": None}):
         with patch("sys.stderr.write") as mock_stderr:
             write_measurement("test_metric", {"test_field": 1.0})
             mock_stderr.assert_called_with("profall: influxdb-client not installed. Skipping measurement write.\n")

@@ -24,7 +24,8 @@ def write_measurement(measurement: str, fields: Mapping[str, float | str]) -> No
         fields: A mapping of field names to their values.
     """
     try:
-        from influxdb_client import InfluxDBClient, Point
+        from influxdb_client.client.influxdb_client import InfluxDBClient
+        from influxdb_client.client.write.point import Point
         from influxdb_client.client.write_api import SYNCHRONOUS
     except ImportError:
         sys.stderr.write("profall: influxdb-client not installed. Skipping measurement write.\n")
