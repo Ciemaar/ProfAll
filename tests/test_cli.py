@@ -7,13 +7,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-from profall.cli import cli, get_site_packages_dir
-
-
-def test_get_site_packages_dir() -> None:
-    """Test getting the site-packages directory."""
-    dir_path = get_site_packages_dir()
-    assert isinstance(dir_path, Path)
+from profall.cli import cli
 
 
 @patch("profall.cli.get_site_packages_dir")

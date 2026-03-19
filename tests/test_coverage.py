@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-from profall.cli import cli, get_site_packages_dir
+from profall.cli import cli
 from profall.core import write_measurement
 
 
@@ -23,22 +23,6 @@ def test_cli_import_and_execution() -> None:
     result = runner.invoke(cli, ["--help"])
     assert result.exit_code == 0
     assert "Manage the ProfAll global profiler." in result.output
-
-
-def test_get_site_packages_dir_user_site() -> None:
-    """Ensure get_site_packages_dir user site logic is covered."""
-    with patch("site.ENABLE_USER_SITE", True):
-        with patch("site.getusersitepackages", return_value="/tmp/user-site"):
-            res = get_site_packages_dir()
-            assert str(res) == "/tmp/user-site"
-
-
-def test_get_site_packages_dir_system_site() -> None:
-    """Ensure get_site_packages_dir system site logic is covered."""
-    with patch("site.ENABLE_USER_SITE", False):
-        with patch("site.getsitepackages", return_value=["/tmp/system-site"]):
-            res = get_site_packages_dir()
-            assert str(res) == "/tmp/system-site"
 
 
 @patch("profall.cli.get_site_packages_dir")

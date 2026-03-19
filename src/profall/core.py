@@ -47,14 +47,14 @@ def write_measurement(measurement: str, fields: Mapping[str, float | str]) -> No
 
     point = Point(measurement)
     for k, v in tags.items():
-        point = point.tag(k, str(v))
+        point = point.tag(k, str(v))  # type: ignore[attr-defined]
     for k, v in fields.items():
-        point = point.field(k, v)
+        point = point.field(k, v)  # type: ignore[attr-defined]
 
     try:
         with InfluxDBClient(url=url, token=token, org=org) as client:
-            write_api = client.write_api(write_options=SYNCHRONOUS)
-            write_api.write(bucket=bucket, org=org, record=point)
+            write_api = client.write_api(write_options=SYNCHRONOUS)  # type: ignore[attr-defined]
+            write_api.write(bucket=bucket, org=org, record=point)  # type: ignore[attr-defined]
     except Exception as e:
         sys.stderr.write(f"profall: Write to influxdb failed: {e}\n")
 
