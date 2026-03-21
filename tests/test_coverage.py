@@ -61,8 +61,9 @@ def test_core_main_execution() -> None:
             with patch("profall.core.__name__", "__main__"):
                 # We need to reload/re-evaluate the module under this context
                 # The easiest way is to read the file and exec it
-                with open("src/profall/core.py") as f:
-                    code = compile(f.read(), "src/profall/core.py", "exec")
+                file_path = Path(__file__).parent.parent / "src" / "profall" / "core.py"
+                with open(file_path) as f:
+                    code = compile(f.read(), str(file_path), "exec")
                     namespace = {"__name__": "__main__"}
                     exec(code, namespace)
                     # mock_record won't be called because the exec uses the unpatched record_execution
