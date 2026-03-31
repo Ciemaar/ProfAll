@@ -1,5 +1,10 @@
 # Agent Instructions for ProfAll
 
+1. **Session Summarization**:
+
+   - Each session should be summarized in a `session_prompt.md` file (or similar session prompt file) that records what was done in the session in the form of a prompt.
+   - This file should be updated as the instructions and goals are clarified throughout the session.
+
 1. **Minimal Imports in Critical Path (`profall.core` and `profall.hook`)**:
 
    - The hook loaded via `profall.pth` is evaluated every time Python starts up on the user's system.
